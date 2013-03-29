@@ -3,35 +3,24 @@ Created on Mar 29, 2013
 
 @author: Chutian
 '''
-'''
-Created on Feb 11, 2013
 
-@author: Chutian
-'''
 import networkx as nw
 import random
 import math
 import matplotlib.pyplot as plt
 
 
-N=0 #N is the total number of nodes in the graph
-N= int(input('Please input the number of nodes that you want to generate: '))
+k=0 #N is the total number of nodes in the graph
+k= int(input('Please input the number of k: '))
 G=nw.Graph()
-#*******************************************************
-"""
-#The following code is for atoumaticly generate preferential attachment graph
-G=nw.barabasi_albert_graph(N, 1)
-print(G.edges())
-freq=nw.degree_histogram(G)
-print(freq)
-"""
-#*******************************************************
 
-#index=0# node index
+
 prefer=1# the chosen node
-for index in range(1,N-1):
-    r=random.randrange(100)/100
-    #print(r)
+for nodes in range(0,k-1):
+    x=random.randrange(0,nodes) #generate a random number x. x away from its own
+    pn=1/((x/1000)*math.log1p(1000)) #probability distribution function
+    #print(x)
+'********************************************************'    
     divs=[]
     probs=[]
     for jndex in range (0,index-1):#computer prob
@@ -48,23 +37,26 @@ for index in range(1,N-1):
     G.add_edge(index+1,prefer)
 freq=nw.degree_histogram(G)
 print("Edges are: ",G.edges())
-#print(G.nodes()) 
-
-#*****************************************************************#
-#the following code is used to count the number of nodes with each degree (from 1 to N)
-'''
-number=[]
-for j in range(0,N):    
-    number.append(0)
-#print(number)
-for i in range(0,N):
-    old=number[G.degree(i)-1]
-    number.pop(G.degree(i)-1)
-    number.insert(G.degree(i)-1,old+1)
-print(number)
-'''
-#*****************************************************************#
-
+'********************************************************'
+def connectShort(nodeCurrent):
+    """ this function is used for connecting short links with node 0 and last new node."""
+    #break last new node with node 0
+    G.remove_edge(nodeCurrent-1, 0)
+    #link new node with last new node
+    G.add_edge(nodeCurrent-1, nodeCurrent)
+    #link new node with node 0
+    G.add_edge(nodeCurrent, 0)
+    G.node[nodeCurrent]['incoming'] = 1
+    G.node[nodeCurrent]['outgoing'] = 1
+'********************************************************'
+'********************************************************'
+def connectLong(nodeCurrent,nodeTarget):
+    """ this function is used for connecting long links."""
+    #link new node with nodeTarget
+    G.add_edge(nodeCurrent, nodeTarget)
+    G.node[nodeTarget]['incoming'] = G.node[nodeTarget]['incoming']+1
+    G.node[nodeCurrent]['outgoing'] = G.node[nodeCurrent]['outgoing']+1
+'********************************************************'
 loogNk=[]
 loogk=[]
 loogNk_loogk=[]
