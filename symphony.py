@@ -9,69 +9,71 @@ import random
 import math
 import matplotlib.pyplot as plt
 
-
 k=0 #N is the total number of nodes in the graph
-k= int(input('Please input the number of k: '))
+k=int(input('Please input the number of k: '))
 G=nw.Graph()
 
 
-prefer=1# the chosen node
-for nodes in range(0,k-1):
-    x=random.randrange(0,nodes) #generate a random number x. x away from its own
-    #pn=1/((x/1000)*math.log1p(1000)) probability distribution function
-    ID=math.exp(math.log10(1000)*(x-1.0)) #implement PDF
-    #print(x)
-'********************************************************'    
-    divs=[]
-    probs=[]
-    for jndex in range (0,index-1):#computer prob
-        probs.append((G.degree(jndex+1)/(2*(index+1))))
-        if jndex !=0:
-            divs.append(divs[jndex-1]+probs[jndex])            
-        else:
-            divs.append(probs[0])            
-        if r<=divs[jndex]:
-            prefer=jndex
-            G.add_edge(jndex+1,prefer)
-            break
-
-    G.add_edge(index+1,prefer)
-freq=nw.degree_histogram(G)
-print("Edges are: ",G.edges())
-'********************************************************'
-def connectShort(nodeCurrent):
+def connectShort(pre,de,new):
     """ this function is used for connecting short links with node 0 and last new node."""
-    #break last new node with node 0
-    G.remove_edge(nodeCurrent-1, 0)
-    #link new node with last new node
-    G.add_edge(nodeCurrent-1, nodeCurrent)
-    #link new node with node 0
-    G.add_edge(nodeCurrent, 0)
-    G.node[nodeCurrent]['incoming'] = 1
-    G.node[nodeCurrent]['outgoing'] = 1
-'********************************************************'
+    #break
+    if G.has_edge(de, pre):
+        G.remove_edge(de, pre)
+    #link new node 
+    G.add_edge(new, de)
+    #link new node
+    G.add_edge(new, pre)     
+    #G.node[new]['outgoing'] = 2
+    #G.node[precessor]['incoming'] = G.node[precessor]['incoming']+1
+    #G.node[decessor]['incoming'] = G.node[decessor]['incoming']+1
+    
+    return G
 '********************************************************'
 def connectLong(nodeCurrent,nodeTarget):
     """ this function is used for connecting long links."""
     #link new node with nodeTarget
     G.add_edge(nodeCurrent, nodeTarget)
-    G.node[nodeTarget]['incoming'] = G.node[nodeTarget]['incoming']+1
-    G.node[nodeCurrent]['outgoing'] = G.node[nodeCurrent]['outgoing']+1
+    #G.node[nodeTarget]['incoming'] = G.node[nodeTarget]['incoming']+1
+    #G.node[nodeCurrent]['outgoing'] = G.node[nodeCurrent]['outgoing']+1
+    return G
 '********************************************************'
-loogNk=[]
-loogk=[]
-loogNk_loogk=[]
-k=freq.__len__()
-for index in range(1,k):
-    if freq[index]!=0:
-        loogNk.append(math.log10(freq[index]))
-        loogk.append(math.log10(index))
-        
+def newNodeJoin(numNode,newNode):
+    """new node joining to the circle"""      
+     
+    #G.node[newNode]['outgoing'] = 0
+    #G.node[newNode]['incoming'] = 0
+                
+    precessor=G.node.__lt__(newNode)
+    decessor=G.node.__ge__(newNode)
+    connectShort(precessor,decessor,newNode)#connect nodes
+    return G 
 
-print("logNk= ",loogNk) 
-print("logk= ",loogk)
-plt.plot(loogk,loogNk,color='w',linestyle='-',marker='*')
-plt.xlabel("Log k")
-plt.ylabel("Log N(k)")
+def symphony(currentNode):           
+    while G.degree(currentNode)<k+2:
+        x=random.random() #generate a random number x. x away from its own    
+        ID=int(1000*math.exp(math.log(1000)*(x-1.0))) #implement PDF; pn=1/((x/1000)*math.log1p(1000)) probability distribution function
+        if G.degree(ID)<2*k+2:
+            if G.has_edge(currentNode, ID):
+                break
+            connectLong(currentNode,ID)  
+            print(ID)
+    return G  
+            
+
+'********************************************************'
+'********************************************************'
+size=0
+while size<1000:
+    #newID=random.randrange(0,999) #generate a random number
+    #if G.has_node(newID) is False:
+    newNodeJoin(size,size)
+    size=size+1
+for index in range(1000):   
+    symphony(index)
+
+nw.draw(G,pos=nw.spring_layout(G))    
+plt.draw()
 plt._show()
+
+'********************************************************'
 
