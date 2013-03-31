@@ -18,7 +18,8 @@ G=nw.Graph()
 prefer=1# the chosen node
 for nodes in range(0,k-1):
     x=random.randrange(0,nodes) #generate a random number x. x away from its own
-    pn=1/((x/1000)*math.log1p(1000)) #probability distribution function
+    #pn=1/((x/1000)*math.log1p(1000)) probability distribution function
+    ID=math.exp(math.log10(1000)*(x-1.0)) #implement PDF
     #print(x)
 '********************************************************'    
     divs=[]
