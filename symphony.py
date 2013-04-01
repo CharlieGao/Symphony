@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 k=0 #N is the total number of nodes in the graph
 k=int(input('Please input the number of k: '))
-G=nw.Graph()
+G=nw.DiGraph()
 
 
 def connectShort(pre,de,new):
@@ -19,10 +19,13 @@ def connectShort(pre,de,new):
     #break
     if G.has_edge(de, pre):
         G.remove_edge(de, pre)
+        G.remove_edge(pre, de)
     #link new node 
     G.add_edge(new, de)
+    G.add_edge(de, new)
     #link new node
-    G.add_edge(new, pre)     
+    G.add_edge(new, pre)
+    G.add_edge(pre, new)     
     #G.node[new]['outgoing'] = 2
     #G.node[precessor]['incoming'] = G.node[precessor]['incoming']+1
     #G.node[decessor]['incoming'] = G.node[decessor]['incoming']+1
@@ -49,14 +52,15 @@ def newNodeJoin(numNode,newNode):
     return G 
 
 def symphony(currentNode):           
-    while G.degree(currentNode)<k+2:
+    while G.out_degree(currentNode)<k+2:
         x=random.random() #generate a random number x. x away from its own    
         ID=int(1000*math.exp(math.log(1000)*(x-1.0))) #implement PDF; pn=1/((x/1000)*math.log1p(1000)) probability distribution function
-        if G.degree(ID)<2*k+2:
+        if G.in_degree(ID)<2*k:
             if G.has_edge(currentNode, ID):
                 break
-            connectLong(currentNode,ID)  
-            print(ID)
+            else:
+                connectLong(currentNode,ID)  
+                print(ID)
     return G  
             
 
@@ -71,7 +75,8 @@ while size<1000:
 for index in range(1000):   
     symphony(index)
 
-nw.draw(G,pos=nw.spring_layout(G))    
+nw.draw(G,pos=nw.random_layout(G))
+
 plt.draw()
 plt._show()
 
