@@ -26,9 +26,7 @@ def connectShort(pre,new):
     #link new node
     G.add_edge(new, pre)
     G.add_edge(pre, new)     
-    #G.node[new]['outgoing'] = 2
-    #G.node[precessor]['incoming'] = G.node[precessor]['incoming']+1
-    #G.node[decessor]['incoming'] = G.node[decessor]['incoming']+1
+
     
     
     return G
@@ -37,16 +35,12 @@ def connectLong(nodeCurrent,nodeTarget):
     """ this function is used for connecting long links."""
     #link new node with nodeTarget
     G.add_edge(nodeCurrent, nodeTarget)
-    #G.node[nodeTarget]['incoming'] = G.node[nodeTarget]['incoming']+1
-    #G.node[nodeCurrent]['outgoing'] = G.node[nodeCurrent]['outgoing']+1
+
     return G
 '********************************************************'
 def newNodeJoin(newNode):
     """new node joining to the circle"""      
-     
-    #G.node[newNode]['outgoing'] = 0
-    #G.node[newNode]['incoming'] = 0
-                
+ 
     #precessor=G.node.__lt__(newNode)
     #decessor=G.node.__ge__(newNode)
     G.add_node(newNode)
@@ -68,8 +62,24 @@ def symphony(currentNode):
 
 '********************************************************'
 def printLinks(checkNode):
-    print(G.successors(checkNode))#all outgoing linked nodes
-    
+    sucs=G.successors(checkNode)
+    #print(G.successors(checkNode))#all outgoing linked nodes
+    print(sucs)
+'********************************************************'
+def computRout(startNode,endNode):
+    """comput rout Path starting from Start Node, using greedy method, unidirection"""
+    print(startNode)
+    pred=startNode
+    sucs=G.successors(pred)
+    while G.successors(pred).__contains__(endNode) is False:
+        for i in range(1,6):
+            if sucs[i]>sucs[i-1]&sucs[i]<endNode:
+                pred=sucs[i]
+                print(pred)
+            else:
+                pred=sucs[i-1]
+                print(pred)
+    print(endNode)
 '********************************************************'
 G.add_node(0)
 
@@ -87,8 +97,9 @@ G.add_edge(0,999)
 for index in range(1000):   
     symphony(index)
     
-printLinks(0)
-
+printLinks(2)
+printLinks(200)
+printLinks(800)
 '''
 nw.draw(G,pos=nw.random_layout(G))
 plt.draw()
