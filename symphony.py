@@ -14,21 +14,22 @@ k=int(input('Please input the number of k: '))
 G=nw.DiGraph()
 
 
-def connectShort(pre,de,new):
-    """ this function is used for connecting short links with node 0 and last new node."""
+def connectShort(pre,new):
+    ''''this function is used for connecting short links with node 0 and last new node.
     #break
     if G.has_edge(de, pre):
         G.remove_edge(de, pre)
         G.remove_edge(pre, de)
     #link new node 
     G.add_edge(new, de)
-    G.add_edge(de, new)
+    G.add_edge(de, new)'''
     #link new node
     G.add_edge(new, pre)
     G.add_edge(pre, new)     
     #G.node[new]['outgoing'] = 2
     #G.node[precessor]['incoming'] = G.node[precessor]['incoming']+1
     #G.node[decessor]['incoming'] = G.node[decessor]['incoming']+1
+    
     
     return G
 '********************************************************'
@@ -40,15 +41,16 @@ def connectLong(nodeCurrent,nodeTarget):
     #G.node[nodeCurrent]['outgoing'] = G.node[nodeCurrent]['outgoing']+1
     return G
 '********************************************************'
-def newNodeJoin(numNode,newNode):
+def newNodeJoin(newNode):
     """new node joining to the circle"""      
      
     #G.node[newNode]['outgoing'] = 0
     #G.node[newNode]['incoming'] = 0
                 
-    precessor=G.node.__lt__(newNode)
-    decessor=G.node.__ge__(newNode)
-    connectShort(precessor,decessor,newNode)#connect nodes
+    #precessor=G.node.__lt__(newNode)
+    #decessor=G.node.__ge__(newNode)
+    G.add_node(newNode)
+    connectShort(newNode-1,newNode)#connect nodes
     return G 
 
 def symphony(currentNode):           
@@ -60,25 +62,37 @@ def symphony(currentNode):
                 break
             else:
                 connectLong(currentNode,ID)  
-                print(ID)
+                #print(ID)
     return G  
             
 
 '********************************************************'
+def printLinks(checkNode):
+    print(G.successors(checkNode))#all outgoing linked nodes
+    
 '********************************************************'
-size=0
-while size<1000:
+G.add_node(0)
+
+size=1
+while size<999:
     #newID=random.randrange(0,999) #generate a random number
     #if G.has_node(newID) is False:
-    newNodeJoin(size,size)
+    #newNodeJoin(size,size)
+    newNodeJoin(size)
     size=size+1
+G.add_node(999)
+G.add_edge(999,0)
+G.add_edge(0,999)
+
 for index in range(1000):   
     symphony(index)
+    
+printLinks(0)
 
+'''
 nw.draw(G,pos=nw.random_layout(G))
-
 plt.draw()
 plt._show()
-
+'''
 '********************************************************'
 
