@@ -66,18 +66,20 @@ def printLinks(checkNode):
     #print(G.successors(checkNode))#all outgoing linked nodes
     print(sucs)
 '********************************************************'
-def computRout(startNode,endNode):
-    """comput rout Path starting from Start Node, using greedy method, unidirection"""
+def computeRout(startNode,endNode):
+    """compute rout Path starting from Start Node, using greedy method, unidirection"""
     print(startNode)
-    pred=startNode
-    sucs=G.successors(pred)
-    while G.successors(pred).__contains__(endNode) is False:
-        for i in range(1,6):
-            if sucs[i]>sucs[i-1]&sucs[i]<endNode:
+    pred=startNode    
+    while G.successors(pred).__contains__(endNode) is not True:
+        sucs=G.successors(pred)
+        for i in range(0,6):
+            if (sucs[i]>pred)&(sucs[i]<endNode):
                 pred=sucs[i]
+                print(sucs)
                 print(pred)
             else:
-                pred=sucs[i-1]
+                pred=pred
+                print(sucs)
                 print(pred)
     print(endNode)
 '********************************************************'
@@ -96,10 +98,12 @@ G.add_edge(0,999)
 
 for index in range(1000):   
     symphony(index)
-    
+'''    
 printLinks(2)
 printLinks(200)
 printLinks(800)
+'''
+computeRout(2,700)
 '''
 nw.draw(G,pos=nw.random_layout(G))
 plt.draw()
