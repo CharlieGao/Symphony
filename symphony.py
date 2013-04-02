@@ -49,11 +49,12 @@ def newNodeJoin(newNode):
 
 def symphony(currentNode):           
     while G.out_degree(currentNode)<k+2:
-        x=random.random() #generate a random number x. x away from its own    
-        ID=int(1000*math.exp(math.log(1000)*(x-1.0))) #implement PDF; pn=1/((x/1000)*math.log1p(1000)) probability distribution function
+        x=random.uniform(0, 1) #generate a random number x. x away from its own    
+        ID=int(1000*math.exp(math.log(1000,math.e)*(x-1.0))) #implement PDF; pn=1/((x/1000)*math.log1p(1000)) probability distribution function
+        
         if G.in_degree(ID)<2*k:
-            if G.has_edge(currentNode, ID):
-                break
+            if G.has_edge(currentNode, ID)|ID is currentNode:
+                ID=ID #do nothing
             else:
                 connectLong(currentNode,ID)  
                 #print(ID)
@@ -72,15 +73,13 @@ def computeRout(startNode,endNode):
     pred=startNode    
     while G.successors(pred).__contains__(endNode) is not True:
         sucs=G.successors(pred)
+        print(sucs)
         for i in range(0,6):
             if (sucs[i]>pred)&(sucs[i]<endNode):
                 pred=sucs[i]
-                print(sucs)
-                print(pred)
-            else:
-                pred=pred
-                print(sucs)
-                print(pred)
+        
+        print(pred)
+
     print(endNode)
 '********************************************************'
 G.add_node(0)
@@ -98,12 +97,13 @@ G.add_edge(0,999)
 
 for index in range(1000):   
     symphony(index)
-'''    
+   
 printLinks(2)
+''' 
 printLinks(200)
 printLinks(800)
 '''
-computeRout(2,700)
+#computeRout(2,800)
 '''
 nw.draw(G,pos=nw.random_layout(G))
 plt.draw()
