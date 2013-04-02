@@ -69,18 +69,44 @@ def printLinks(checkNode):
 '********************************************************'
 def computeRout(startNode,endNode):
     """compute rout Path starting from Start Node, using greedy method, unidirection"""
-    print(startNode)
-    pred=startNode    
-    while G.successors(pred).__contains__(endNode) is not True:
-        sucs=G.successors(pred)
-        print(sucs)
-        for i in range(0,6):
-            if (sucs[i]>pred)&(sucs[i]<endNode):
-                pred=sucs[i]
-        
-        print(pred)
-
-    print(endNode)
+    
+    
+    if endNode>startNode:
+        #print(startNode)
+        routList=[startNode]
+        pred=startNode    
+        while G.successors(pred).__contains__(endNode) is not True:
+            sucs=G.successors(pred)
+            #print(sucs)
+            for i in range(0,k+2):
+                if (sucs[i]>pred)&(sucs[i]<endNode):
+                    pred=sucs[i]
+            
+            #print(pred)
+            routList.append(pred)
+        #print(endNode)
+        routList.append(endNode)
+        print(routList)
+    else:
+        #print(startNode)
+        routList=[startNode]
+        pred=startNode    
+        while G.successors(pred%999).__contains__(endNode) is not True:
+            sucs=G.successors(pred%999)
+            #print(sucs)
+            for i in range(0,k+2):
+                sucss=sucs[i]
+                if (sucs[i]<endNode)&(sucs[i]>=0):
+                    sucss=sucs[i]+999                   
+                    
+                if (sucss>pred)&(sucss<endNode+999):
+                    pred=sucss
+            
+            #print(pred%999)
+            routList.append(pred%999)
+        #print(endNode)
+        routList.append(endNode)
+        print(routList)
 '********************************************************'
 G.add_node(0)
 
@@ -92,20 +118,30 @@ while size<999:
     newNodeJoin(size)
     size=size+1
 G.add_node(999)
+G.add_edge(999,998)
+G.add_edge(998,999)
 G.add_edge(999,0)
 G.add_edge(0,999)
 
 for index in range(1000):   
     symphony(index)
-   
+
+
+
+
 printLinks(2)
-''' 
 printLinks(200)
 printLinks(800)
-'''
-#computeRout(2,800)
-'''
-nw.draw(G,pos=nw.random_layout(G))
+print("/*******************************************************************/")
+computeRout(2,700)
+
+computeRout(800,10)
+
+computeRout(500,100)
+computeRout(90,891)
+computeRout(200,600)
+
+'''nw.draw(G,pos=nw.random_layout(G))
 plt.draw()
 plt._show()
 '''
