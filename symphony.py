@@ -7,7 +7,6 @@ Created on Mar 29, 2013
 import networkx as nw
 import random
 import math
-import matplotlib.pyplot as plt
 
 k=0 #N is the total number of nodes in the graph
 k=int(input('Please input the number of k: '))
@@ -15,34 +14,19 @@ G=nw.DiGraph()
 
 
 def connectShort(pre,new):
-    ''''this function is used for connecting short links with node 0 and last new node.
-    #break
-    if G.has_edge(de, pre):
-        G.remove_edge(de, pre)
-        G.remove_edge(pre, de)
-    #link new node 
-    G.add_edge(new, de)
-    G.add_edge(de, new)'''
     #link new node
     G.add_edge(new, pre)
-    G.add_edge(pre, new)     
-
-    
-    
+    G.add_edge(pre, new)   
     return G
 '********************************************************'
 def connectLong(nodeCurrent,nodeTarget):
     """ this function is used for connecting long links."""
     #link new node with nodeTarget
     G.add_edge(nodeCurrent, nodeTarget)
-
     return G
 '********************************************************'
 def newNodeJoin(newNode):
     """new node joining to the circle"""      
- 
-    #precessor=G.node.__lt__(newNode)
-    #decessor=G.node.__ge__(newNode)
     G.add_node(newNode)
     connectShort(newNode-1,newNode)#connect nodes
     return G 
@@ -58,8 +42,7 @@ def symphony(currentNode):
             else:
                 connectLong(currentNode,ID)  
                 #print(ID)
-    return G  
-            
+    return G              
 
 '********************************************************'
 def printLinks(checkNode):
@@ -78,8 +61,7 @@ def computeRout(startNode,endNode):
             #print(sucs)
             for i in range(0,k+2):
                 if (sucs[i]>pred)&(sucs[i]<endNode):
-                    pred=sucs[i]
-            
+                    pred=sucs[i]            
             #print(pred)
             routList.append(pred)
         #print(endNode)
@@ -95,11 +77,9 @@ def computeRout(startNode,endNode):
             for i in range(0,k+2):
                 sucss=sucs[i]
                 if (sucs[i]<endNode)&(sucs[i]>=0):
-                    sucss=sucs[i]+999                   
-                    
+                    sucss=sucs[i]+999                    
                 if (sucss>pred)&(sucss<endNode+999):
-                    pred=sucss
-            
+                    pred=sucss            
             #print(pred%999)
             routList.append(pred%999)
         #print(endNode)
@@ -107,7 +87,6 @@ def computeRout(startNode,endNode):
         print(routList)
 '********************************************************'
 G.add_node(0)
-
 size=1
 while size<1000:
     #newID=random.randrange(0,999) #generate a random number
@@ -121,23 +100,18 @@ G.add_edge(0,999)
 
 for index in range(1000):   
     symphony(index)
-'''************************************************************************************'''
+'************************************************************************************'
 
 printLinks(2)
 printLinks(200)
 printLinks(800)
 
-print("/*******************************************************************/")
+print("*******************************************************************")
 computeRout(2,700)
 computeRout(800,10)
 computeRout(500,100)
 computeRout(90,891)
 computeRout(200,600)
 
-
-'''nw.draw(G,pos=nw.random_layout(G))
-plt.draw()
-plt._show()
-'''
 '********************************************************'
 
