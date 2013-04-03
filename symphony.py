@@ -50,7 +50,7 @@ def newNodeJoin(newNode):
 def symphony(currentNode):           
     while G.out_degree(currentNode)<k+2:
         x=random.uniform(0, 1) #generate a random number x. x away from its own    
-        ID=int(1000*math.exp(math.log(1000,math.e)*(x-1.0))) #implement PDF; pn=1/((x/1000)*math.log1p(1000)) probability distribution function
+        ID=int(1000*math.exp(math.log(1000)*(x-1.0))) #implement PDF; pn=1/((x/1000)*math.log1p(1000)) probability distribution function
         
         if G.in_degree(ID)<2*k:
             if G.has_edge(currentNode, ID)|ID is currentNode:
@@ -68,9 +68,7 @@ def printLinks(checkNode):
     print(sucs)
 '********************************************************'
 def computeRout(startNode,endNode):
-    """compute rout Path starting from Start Node, using greedy method, unidirection"""
-    
-    
+    """compute rout Path starting from Start Node, using greedy method, unidirection"""      
     if endNode>startNode:
         #print(startNode)
         routList=[startNode]
@@ -111,35 +109,31 @@ def computeRout(startNode,endNode):
 G.add_node(0)
 
 size=1
-while size<999:
+while size<1000:
     #newID=random.randrange(0,999) #generate a random number
     #if G.has_node(newID) is False:
     #newNodeJoin(size,size)
     newNodeJoin(size)
     size=size+1
-G.add_node(999)
-G.add_edge(999,998)
-G.add_edge(998,999)
+
 G.add_edge(999,0)
 G.add_edge(0,999)
 
 for index in range(1000):   
     symphony(index)
-
-
-
+'''************************************************************************************'''
 
 printLinks(2)
 printLinks(200)
 printLinks(800)
+
 print("/*******************************************************************/")
 computeRout(2,700)
-
 computeRout(800,10)
-
 computeRout(500,100)
 computeRout(90,891)
 computeRout(200,600)
+
 
 '''nw.draw(G,pos=nw.random_layout(G))
 plt.draw()
